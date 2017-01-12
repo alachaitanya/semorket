@@ -3,8 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
-
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"log"
 )
 
 // SimpleChaincode example simple Chaincode implementation
@@ -16,6 +16,8 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error starting Simple chaincode: %s", err)
 	}
+	logger := log.New(&buf, "logger: ", log.Lshortfile)
+	logger.Print("Test log1")
 }
 
 // Init resets all the things
@@ -105,15 +107,36 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 	if !ok {
 		return nil, errors.New("insertRowTableOne operation failed. Row with given key already exists")
 	}
-	return []byte("Added succesfully"), nil
+
+	return nil, nil
 }
 
 // read - query function to read key/value pair
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	tableOne, err := stub.GetTable("tableOne")
+	/*	tableOne, err := stub.GetTable("tableOne")
 
-	if err != nil {
-		return nil, err
+		rows, err := GetRows("tableOne", key []Column) (<-chan Row, error)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return []byte(tableOne.String()), nil*/
+
+	if len(args) < 1 {
+		return nil, errors.New("getRowTableOne failed. Must include 1 key value")
 	}
-	return []byte(tableOne.String()), nil
+
+	col1Val := args[0]
+	var columns []shim.Column
+	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
+	columns = append(columns, col1)
+
+	row, err := stub.GetRow("tableOne", columns)
+	if err != nil {
+		return nil, fmt.Errorf("getRowTableOne operation failed. %s", err)
+	}
+
+	rowString := fmt.Sprintf("%s", row)
+	return []byte(rowString), nil
 }
