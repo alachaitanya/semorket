@@ -105,7 +105,7 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 	if !ok {
 		return nil, errors.New("insertRowTableOne operation failed. Row with given key already exists")
 	}
-	return "Added succesfully", nil
+	return []byte("Added succesfully"), nil
 }
 
 // read - query function to read key/value pair
