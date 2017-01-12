@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"log"
 )
 
 // SimpleChaincode example simple Chaincode implementation
