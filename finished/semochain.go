@@ -10,6 +10,12 @@ import (
 type SimpleChaincode struct {
 }
 
+type Mortgage struct {
+	MortId   string
+	Lendee   string
+	Servicer string
+}
+
 func main() {
 	err := shim.Start(new(SimpleChaincode))
 	if err != nil {
@@ -129,11 +135,11 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
 	columns = append(columns, col1)
 
-	rows, err := stub.GetRows("tableOne", columns)
+	row, err := stub.GetRow("tableOne", columns)
 	if err != nil {
 		return nil, fmt.Errorf("getRowTableOne operation failed. %s", err)
 	}
 
-	rowString := fmt.Sprintf("%s", rows)
+	rowString := fmt.Sprintf("%s", row.GetColumns())
 	return []byte(rowString), nil
 }
