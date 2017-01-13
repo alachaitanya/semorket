@@ -1,11 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"log"
 )
 
 // SimpleChaincode example simple Chaincode implementation
@@ -139,14 +137,11 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 
 	rows, err := stub.GetRows("tableOne", columns)
 
-	var buffer bytes.Buffer
-	var rowString = ""
-	var buf bytes.Buffer
-	logger := log.New(&buf, "logger: ", log.Lshortfile)
+	var concatenated = ""
+
 	for row := range rows {
-		rowString = fmt.Sprintf("%s", row)
-		buffer.WriteString(rowString)
-		logger.Print("Hello, log file! " + rowString)
+		/*		rowString = fmt.Sprintf("%s", row)*/
+		concatenated = fmt.Sprint(concatenated + fmt.Sprintf("%s", row))
 	}
 
 	if err != nil {
@@ -154,5 +149,5 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
 	/*	rowString := fmt.Sprintf("%s", row.GetColumns())*/
-	return []byte(buffer.String()), nil
+	return []byte(concatenated), nil
 }
