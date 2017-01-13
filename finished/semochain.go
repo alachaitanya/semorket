@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -8,12 +9,6 @@ import (
 
 // SimpleChaincode example simple Chaincode implementation
 type SimpleChaincode struct {
-}
-
-type Mortgage struct {
-	MortId   string
-	Lendee   string
-	Servicer string
 }
 
 func main() {
@@ -116,15 +111,6 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 
 // read - query function to read key/value pair
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	/*	tableOne, err := stub.GetTable("tableOne")
-
-		rows, err := GetRows("tableOne", key []Column) (<-chan Row, error)
-
-		if err != nil {
-			return nil, err
-		}
-
-		return []byte(tableOne.String()), nil*/
 
 	if len(args) < 1 {
 		return nil, errors.New("getRowTableOne failed. Must include 1 key value")
@@ -135,18 +121,30 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
 	columns = append(columns, col1)
 
-	row, err := stub.GetRow("tableOne", columns)
-
-	/*	var concatenated = ""
-
-		for row := range rows {
-			concatenated = fmt.Sprint(concatenated + fmt.Sprintf("%s", row))
-		}*/
-
+	rowChannel, err := stub.GetRows("tableOne", columns)
 	if err != nil {
-		return nil, fmt.Errorf("getRowTableOne operation failed. %s", err)
+		return nil, fmt.Errorf("getRowsTableOne operation failed. %s", err)
 	}
 
-	rowString := fmt.Sprintf("%s", row)
-	return []byte(rowString), nil
+	var rows []shim.Row
+	for {
+		select {
+		case row, ok := <-rowChannel:
+			if !ok {
+				rowChannel = nil
+			} else {
+				rows = append(rows, row)
+			}
+		}
+		if rowChannel == nil {
+			break
+		}
+	}
+
+	jsonRows, err := json.Marshal(rows)
+	if err != nil {
+		return nil, fmt.Errorf("getRowsTableOne operation failed. Error marshaling JSON: %s", err)
+	}
+
+	return jsonRows, nil
 }
