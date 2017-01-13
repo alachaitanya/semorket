@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -135,11 +136,19 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
 	columns = append(columns, col1)
 
-	row, err := stub.GetRow("tableOne", columns)
+	rows, err := stub.GetRows("tableOne", columns)
+
+	var buffer bytes.Buffer
+	var rowString = ""
+	for row := range rows {
+		rowString = fmt.Sprintf("%s", row)
+		buffer.WriteString(rowString)
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("getRowTableOne operation failed. %s", err)
 	}
 
-	rowString := fmt.Sprintf("%s", row.GetColumns())
-	return []byte(rowString), nil
+	/*	rowString := fmt.Sprintf("%s", row.GetColumns())*/
+	return []byte(buffer.String()), nil
 }
