@@ -143,6 +143,7 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	for row := range rows {
 		rowString = fmt.Sprintf("%s", row)
 		buffer.WriteString(rowString)
+		fmt.Sprintf("%s", rowString)
 	}
 
 	if err != nil {
