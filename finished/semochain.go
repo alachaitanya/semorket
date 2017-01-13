@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"log"
 )
 
 // SimpleChaincode example simple Chaincode implementation
@@ -140,10 +141,12 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 
 	var buffer bytes.Buffer
 	var rowString = ""
+	var buf bytes.Buffer
+	logger := log.New(&buf, "logger: ", log.Lshortfile)
 	for row := range rows {
 		rowString = fmt.Sprintf("%s", row)
 		buffer.WriteString(rowString)
-		fmt.Sprintf("%s", rowString)
+		logger.Print("Hello, log file! " + rowString)
 	}
 
 	if err != nil {
