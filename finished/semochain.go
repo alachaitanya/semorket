@@ -135,19 +135,18 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
 	columns = append(columns, col1)
 
-	rows, err := stub.GetRows("tableOne", columns)
+	row, err := stub.GetRow("tableOne", columns)
 
-	var concatenated = ""
+	/*	var concatenated = ""
 
-	for row := range rows {
-		/*		rowString = fmt.Sprintf("%s", row)*/
-		concatenated = fmt.Sprint(concatenated + fmt.Sprintf("%s", row))
-	}
+		for row := range rows {
+			concatenated = fmt.Sprint(concatenated + fmt.Sprintf("%s", row))
+		}*/
 
 	if err != nil {
 		return nil, fmt.Errorf("getRowTableOne operation failed. %s", err)
 	}
 
-	/*	rowString := fmt.Sprintf("%s", row.GetColumns())*/
-	return []byte(concatenated), nil
+	rowString := fmt.Sprintf("%s", row)
+	return []byte(rowString), nil
 }
