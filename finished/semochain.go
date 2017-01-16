@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"log"
 )
 
 // SimpleChaincode example simple Chaincode implementation
@@ -116,6 +118,13 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 
 // read - query function to read key/value pair
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	var buf bytes.Buffer
+	logger := log.New(&buf, "logger: ", log.Lshortfile)
+	logger.Print("Hello, log file!")
+
+	fmt.Print(&buf)
+
 	if len(args) < 1 {
 		return nil, errors.New("getRowsTableOne failed. Must include 1 key value")
 	}
