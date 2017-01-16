@@ -1,13 +1,13 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"log"
 )
+
+var logger = shim.NewLogger("SemorketChaincode")
 
 // SimpleChaincode example simple Chaincode implementation
 type SimpleChaincode struct {
@@ -119,11 +119,17 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 // read - query function to read key/value pair
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
-	var buf bytes.Buffer
-	logger := log.New(&buf, "logger: ", log.Lshortfile)
-	logger.Print("Hello, log file!")
+	/*	var buf bytes.Buffer
+		logger := log.New(&buf, "logger: ", log.Lshortfile)
+		logger.Print("Hello, log file!")*/
 
-	fmt.Print(&buf)
+	logger.SetLevel(shim.LogDebug)
+
+	logger.Debug("function: ", " Hey")
+	/*	logLevel, _ := shim.LogLevel(os.Getenv("SHIM_LOGGING_LEVEL"))
+		shim.SetLoggingLevel(logLevel)*/
+
+	/*	fmt.Print(&buf)*/
 
 	if len(args) < 1 {
 		return nil, errors.New("getRowsTableOne failed. Must include 1 key value")
