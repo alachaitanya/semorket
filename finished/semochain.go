@@ -116,13 +116,13 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 
 // read - query function to read key/value pair
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
 	if len(args) < 1 {
-		return nil, errors.New("getRowTableOne failed. Must include 1 key value")
+		return nil, errors.New("getRowsTableFour failed. Must include 1 key value")
 	}
 
-	col1Val := args[0]
 	var columns []shim.Column
+
+	col1Val := args[0]
 	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
 	columns = append(columns, col1)
 
@@ -152,6 +152,7 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
 	return jsonRows, nil
+
 }
 
 func (t *SimpleChaincode) test(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
