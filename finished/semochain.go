@@ -71,6 +71,11 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	if function == "read" { //read a variable
 		return t.read(stub, args)
 	}
+
+	if function == "test" { //read a variable
+		return t.test(stub, args)
+	}
+
 	fmt.Println("query did not find func: " + function)
 
 	return nil, errors.New("Received unknown function query: " + function)
@@ -147,4 +152,23 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
 	return jsonRows, nil
+}
+
+func (t *SimpleChaincode) test(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	if len(args) < 1 {
+		return nil, errors.New("getRowTableOne failed. Must include 1 key value")
+	}
+
+	col1Val := args[0]
+	var columns []shim.Column
+	col1 := shim.Column{Value: &shim.Column_String_{String_: col1Val}}
+	columns = append(columns, col1)
+
+	row, err := stub.GetRow("tableOne", columns)
+	if err != nil {
+		return nil, fmt.Errorf("getRowTableOne operation failed. %s", err)
+	}
+
+	rowString := fmt.Sprintf("%s", row)
+	return []byte(rowString), nil
 }
