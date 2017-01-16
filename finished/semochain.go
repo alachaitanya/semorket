@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"os"
 )
 
 var logger = shim.NewLogger("SemorketChaincode")
@@ -124,11 +125,10 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 		logger.Print("Hello, log file!")*/
 
 	logger.SetLevel(shim.LogDebug)
-
-	logger.Debug("function: ", " Hey")
-	/*	logLevel, _ := shim.LogLevel(os.Getenv("SHIM_LOGGING_LEVEL"))
-		shim.SetLoggingLevel(logLevel)*/
-
+	logLevel, _ := shim.LogLevel(os.Getenv("SHIM_LOGGING_LEVEL"))
+	shim.SetLoggingLevel(logLevel)
+	var say = "Hey Jack!"
+	logger.Debug("function: ", say)
 	/*	fmt.Print(&buf)*/
 
 	if len(args) < 1 {
