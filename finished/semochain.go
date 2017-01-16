@@ -117,7 +117,7 @@ func (t *SimpleChaincode) add(stub shim.ChaincodeStubInterface, args []string) (
 // read - query function to read key/value pair
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	if len(args) < 1 {
-		return nil, errors.New("getRowsTableFour failed. Must include 1 key value")
+		return nil, errors.New("getRowsTableOne failed. Must include 1 key value")
 	}
 
 	var columns []shim.Column
@@ -128,7 +128,7 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 
 	rowChannel, err := stub.GetRows("tableOne", columns)
 	if err != nil {
-		return nil, fmt.Errorf("getRowsTableOne operation failed. %s", err)
+		return []byte("getrowserror"), fmt.Errorf("getRowsTableOne operation failed. %s", err)
 	}
 
 	var rows []shim.Row
@@ -148,7 +148,7 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 
 	jsonRows, err := json.Marshal(rows)
 	if err != nil {
-		return nil, fmt.Errorf("getRowsTableOne operation failed. Error marshaling JSON: %s", err)
+		return []byte("marshallerror"), fmt.Errorf("getRowsTableOne operation failed. Error marshaling JSON: %s", err)
 	}
 
 	return jsonRows, nil
