@@ -112,8 +112,7 @@ func (t *SimpleChaincode) check_affiliation(stub shim.ChaincodeStubInterface) (s
 //GET CALLER DATA
 func (t *SimpleChaincode) get_caller_data(stub shim.ChaincodeStubInterface) (string, string, error) {
 
-	user := "bank"
-	//user, err := t.get_username(stub)
+	user, err := t.get_username(stub)
 
 	// if err != nil { return "", "", err }
 
@@ -121,12 +120,11 @@ func (t *SimpleChaincode) get_caller_data(stub shim.ChaincodeStubInterface) (str
 
 	// if err != nil { return "", "", err }
 
-	affiliation := "pl"
-	//affiliation, err := t.check_affiliation(stub)
+	affiliation, err := t.check_affiliation(stub)
 
-	/*	if err != nil {
+	if err != nil {
 		return "", "", err
-	}*/
+	}
 
 	return user, affiliation, nil
 }
