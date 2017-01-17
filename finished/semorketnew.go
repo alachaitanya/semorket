@@ -124,9 +124,9 @@ func (t *SimpleChaincode) get_caller_data(stub shim.ChaincodeStubInterface) (str
 	affiliation := "pl"
 	//affiliation, err := t.check_affiliation(stub)
 
-	if err != nil {
+	/*	if err != nil {
 		return "", "", err
-	}
+	}*/
 
 	return user, affiliation, nil
 }
