@@ -111,7 +111,7 @@ func (t *SimpleChaincode) check_affiliation(stub shim.ChaincodeStubInterface) (s
 
 //GET CALLER DATA
 func (t *SimpleChaincode) get_caller_data(stub shim.ChaincodeStubInterface) (string, string, error) {
-
+	logger.Info("get_caller_data called")
 	user, err := t.get_username(stub)
 
 	// if err != nil { return "", "", err }
